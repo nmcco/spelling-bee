@@ -64,8 +64,8 @@ export default class VocabGame extends Component {
   
         <div>
           <header className="App-header">
-            <button onClick={this.handleNextWord}>Next</button>
-    
+          <a className="next" onClick={this.handleNextWord}>&#x25B6;</a>
+          
             <h1 className="App-title">{this.state.currentWord.word}</h1>
           </header>
           <div>

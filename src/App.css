@@ -1,8 +1,15 @@
 nav {
 
 }
+
+nav ul {
+  margin:0;
+}
+
 nav li {
   display:inline-block;
+  padding:4px;
+  text-align: center;
   margin:0 10px;
 }
 
@@ -22,12 +29,15 @@ nav li {
   position: relative;
 }
 
-.App-header button {
+.App-header .next {
   position: absolute;
   top:0px;
   right:0px;
+  bottom:0px;
+  text-align: center;
+  padding:5px;
   border-radius: 0;
-  font-size:1.5em;
+  font-size:2.5em;
   cursor: pointer;
 
 }
@@ -38,6 +48,11 @@ nav li {
 
 .App-intro {
   font-size: large;
+}
+
+.play-word {
+  font-size:70px;
+  text-decoration: none;
 }
 
 .choice {
@@ -58,9 +73,35 @@ nav li {
 }
 
 input.answer-box {
-  font-size:25px;
+  font-size:30px;
+  text-align: center;
+  width:100%;
+  box-sizing:border-box;
+  border-radius: 0;
+  padding:5px 0;
 }
 
+button.check-answer {
+  display:block;
+  width:100%;
+  font-size:30px;
+  border-radius: 0px;
+
+
+}
+
+.word-result {
+  font-size:40px;
+  text-align: center;
+  color:#f00;
+  margin-top:15px;
+  padding:10px;
+  background:#333;
+}
+
+.word-result.correct {
+  color:#0f0;
+}
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
