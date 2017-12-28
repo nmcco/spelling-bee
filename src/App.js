@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
+import './utils.js';
+import VocabGame from './VocabGame';
+import SpellingGame from './SpellingGame';
+import WordGame from './WordGame';
+import { Switch, Route, Redirect, Link } from 'react-router-dom'
 
 class App extends Component {
   constructor(props) {
@@ -10,12 +15,24 @@ class App extends Component {
     };
   }
   componentWillMount() {
-    fetch('http://neilm.com/benjamin/spellingbee/getwords.php')
-    .then(response => response.json())
-    .then(data => { this.onDataReady(data); });
+
+    var spellingWordsString = localStorage.getItem('spellingWords');
+
+    if (spellingWordsString) {
+      this.setState({
+        words:JSON.parse(spellingWordsString)
+      });
+    }
+    else {
+      fetch('http://neilm.com/benjamin/spellingbee/getwords.php')
+      .then(response => response.json())
+      .then(data => { this.onDataReady(data); });
+    }
   }
   onDataReady(data) {
     //console.info(data);
+
+    localStorage.setItem('spellingWords', JSON.stringify(data));
 
     this.setState({
       words:data
@@ -25,104 +42,51 @@ class App extends Component {
   
   render() {
     return (
-      <div className="App">
-        { this.state.words.length ? <WordGame1 words={this.state.words} /> : 'Initializing' }
-      </div>
-    );
-  }
-}
-
-class WordGame1 extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currentWord:{},
-      choices:[]
-    };
-
-    this.handleCheckWord = this.handleCheckWord.bind(this);
-    this.handleNextWord = this.handleNextWord.bind(this);
-    
-  }
-  componentWillMount() {
-    this.nextWord();
-  }
-  getWord() {
-    var rand = getRandom(0,this.props.words.length-1);
-    var word =  this.props.words[rand];
-    return JSON.parse(JSON.stringify(word)); // copy as value
-  }
-  nextWord() {
-    var currentWord = this.getWord();
-
-    var choices = [
-      this.getWord(),
-      this.getWord(),
-      this.getWord(),
-      this.getWord()
-    ];
-
-    var correctPlace = getRandom(0,choices.length);
-    choices.splice(correctPlace,0,currentWord);
-
-
-    this.setState({
-      currentWord:currentWord,
-      choices:choices
-    })
-  }
-  handleNextWord(){
-    this.nextWord();
-  }
-
-  handleCheckWord(e) {
-
-    var answerNum = e.target.getAttribute('data-index');
-    var answerWord = this.state.choices[answerNum];
-
-    answerWord.isRight = answerWord.word === this.state.currentWord.word;
-    answerWord.isWrong = answerWord.word !== this.state.currentWord.word;
-    
-    this.setState({
-      choices:this.state.choices
-    });
-
-  }
-  render() {
-    var self = this;
-    return (
-
-      <div>
-        <header className="App-header">
-          <button onClick={this.handleNextWord}>Next</button>
-  
-          <h1 className="App-title">{this.state.currentWord.word}</h1>
-        </header>
-        <div>
-        {this.state.choices.map(function(choice,index) {
-          var className = 'choice';
-          if (choice.isRight) {
-            className += ' right';
-          }
-          else if (choice.isWrong) {
-            className += ' wrong';
-          }
-          return (
-            <h2 className={className} key={index} data-index={index} onClick={self.handleCheckWord}>{choice.definition}</h2>
+      <div> 
+      <header>
+      <nav>
+        <ul>
+          <li><Link to='/spelling'>Spelling</Link></li>
+          <li><Link to='/vocab'>Vocab</Link></li>
+          <li><Link to='/definition'>Definition</Link></li>
+        </ul>
+      </nav>
+    </header>
+      <Switch>
+      <Route path="/spelling" render={(props) => (
+          this.state.words.length ? (
+          <SpellingGame words={this.state.words} />
           )
-        })}
-
-      </div>
-
-        
+          :
+        ( <Redirect to="/" /> )
+        )} />
+        <Route path="/vocab" render={(props) => (
+          this.state.words.length ? (
+          <VocabGame words={this.state.words} />
+          )
+          :
+        ( <Redirect to="/" /> )
+        )} />
+       <Route path="/definition" render={(props) => (
+          this.state.words.length ? (
+          <WordGame words={this.state.words} />
+          )
+          :
+        ( <Redirect to="/" /> )
+        )} />
+      </Switch>
       </div>
     );
   }
 }
 
-function getRandom(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
+
+const App1 = () => (
+  <div>App1</div> 
+)
+
+const App2 = () => (
+  <div>App2</div> 
+)
 
 export default App;

@@ -1,3 +1,11 @@
+nav {
+
+}
+nav li {
+  display:inline-block;
+  margin:0 10px;
+}
+
 .App {
   text-align: center;
 }
@@ -47,6 +55,10 @@
 }
 .choice.wrong {
   background:#d44;
+}
+
+input.answer-box {
+  font-size:25px;
 }
 
 @keyframes App-logo-spin {
